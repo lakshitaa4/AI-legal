@@ -13,11 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "AI Professional Tax Suite", // Change this to your app name
-  description: "God-Mode Legal and Tax Intelligence Agent",
-  // Optional: Add a custom icon if you have one in the public folder
+  title: "AI Professional Tax Suite",
+  description: "God-Mode Legal Agent",
   icons: {
-    icon: "/favicon.ico", 
+    icon: '/favicon.ico', // This looks in the public folder by default
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   },
 };
 
