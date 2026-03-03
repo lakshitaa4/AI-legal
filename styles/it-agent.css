@@ -1,0 +1,22 @@
+.tax-render-engine table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin: 20px 0;
+    border: 1px solid #e2e8f0;
+}
+.tax-render-engine th { background: #f8fafc; padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; }
+.tax-render-engine td { padding: 10px; border: 1px solid #e2e8f0; vertical-align: top; }
+
+.tax-render-engine [style*="color:red"], .tax-render-engine s {
+    color: #ef4444 !important;
+    text-decoration: line-through !important;
+    background-color: #fee2e2;
+}
+
+.tax-render-engine [style*="color:green"] {
+    color: #10b981 !important;
+    background-color: #ecfdf5;
+    font-weight: bold;
+}
+
