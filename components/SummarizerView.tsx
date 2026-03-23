@@ -9,8 +9,7 @@ import { Copy, Download, Send, Eye, Loader2, User, Bot, FileText, AlertCircle } 
 import { motion, AnimatePresence } from 'framer-motion';
 import { summarizer_api } from '@/lib/api';
 
-const API_BASE_URL = 'https://laksss-ai-legal-suite.hf.space';
-
+const API_BASE_URL =  'https://laksss-tax-hub.hf.space'; // Ensure this matches the backend URL
 export default function SummarizerView() {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

@@ -23,7 +23,7 @@ export default function LoginScreen({ onLoginSuccess }: { onLoginSuccess: (email
     setError("");
 
     try {
-      const res = await fetch("https://laksss-ai-legal-suite.hf.space/api/v1/auth/login", {
+      const res = await fetch("https://laksss-tax-hub.hf.space/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

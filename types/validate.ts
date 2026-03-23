@@ -24,6 +24,30 @@ export interface IssueSchema {
   documents_required?: string[];
 }
 
+export interface AuthorityDetails {
+  name?: string;
+  designation?: string;
+  jurisdiction?: string;
+  address?: string;
+}
+
+export interface HearingInfo {
+  date?: string;
+  time?: string;
+  location?: string;
+  type?: string;
+  venue?: string;
+}
+
+export interface LLMInput {
+  authority_details?: AuthorityDetails;
+  hearing_info?: HearingInfo;
+  hearing_date?: string;
+  documents_requested?: string[];
+  extracted_tables?: string[];
+  [key: string]: any;
+}
+
 export interface NoticeValidationResponse {
   document_type: string;
   domain: string;
@@ -33,6 +57,7 @@ export interface NoticeValidationResponse {
   pan: string | null;
   taxpayer_name: string | null;
   date_of_issue: string | null;
+  date_of_receipt?: string | null;
   submission_deadline: string | null;
   hearing_date: string | null;
   hearing_type: string | null;
@@ -47,6 +72,8 @@ export interface NoticeValidationResponse {
   // NEW EY-Style Fields
   validation_grid: ValidationCheck[];
   advisory_notes: Record<string, string>;
+  // Detailed extraction (optional)
+  llm_input?: LLMInput;
 }
 
 

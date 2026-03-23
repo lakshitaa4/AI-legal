@@ -10,6 +10,7 @@ import {
   LayoutDashboard, 
   Scale,
   FilePenLine,
+  Brain,
   LogOut // Added for logout button
 } from 'lucide-react';
 
@@ -19,11 +20,14 @@ import ITAgentRoot from '@/components/it-agent/ITAgentRoot';
 import NoticeAgentView from '@/components/NoticeAgentView';
 import DraftingAgentView from '@/components/DraftingAgentView';
 import LoginScreen from '@/components/LoginScreen'; // Added Login import
+import ITResearchAgentView from '@/components/RAGDemoPage'
 
 export default function App() {
-  const [activeTool, setActiveTool] = useState<'landing' | 'tds' | 'summarizer' | 'it-agent' | 'notice' | 'drafting'>('landing');
+  const [activeTool, setActiveTool] = useState<'landing' | 'tds' | 'summarizer' | 'it-agent' | 'notice' | 'drafting' | 'research'>('landing');
   const [user, setUser] = useState<string | null>(null); // Tracking user
   const [isInitialized, setIsInitialized] = useState(false); // Session check
+  const [researchKey, setResearchKey] = useState(0)
+  const resetResearch = () => { setResearchKey(prev => prev + 1); setActiveTool('research') }
 
   // Check for existing session on load
   useEffect(() => {
@@ -159,6 +163,20 @@ export default function App() {
               <p className="text-slate-500 text-sm leading-relaxed">Income Tax Act comparison & advisory workflows.</p>
             </div>
           </Card>
+          <Card
+            onClick={() => setActiveTool('research')}
+            className="group p-8 cursor-pointer border-2 hover:border-indigo-500 hover:shadow-2xl transition-all flex flex-col items-center text-center space-y-6 bg-white"
+          >
+            <div className="p-4 bg-indigo-50 rounded-2xl group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+              <Brain className="w-10 h-10" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-xl font-bold">Tax Law Research Agent</h2>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                Statutory research on ITA 1961 with cited answers and amendment alerts.
+              </p>
+            </div>
+          </Card>
         </div>
       </div>
     );
@@ -187,6 +205,7 @@ export default function App() {
                 : activeTool === 'summarizer' ? resetSum
                 : activeTool === 'it-agent' ? resetIT
                 : activeTool === 'notice' ? resetNotice
+                : activeTool === 'research' ? resetResearch
                 : resetDraft
               }
             className="flex items-center gap-2 hover:opacity-70 transition-opacity"
@@ -205,6 +224,10 @@ export default function App() {
             )}
             {activeTool === 'drafting' && (
               <><FilePenLine className="w-5 h-5 text-rose-600" /><span className="font-bold text-slate-900">Drafting Agent</span></>
+            )}
+
+            {activeTool === 'research' && (
+              <><Brain className="w-5 h-5 text-indigo-600" /><span className="font-bold text-slate-900">Tax Law Research Agent</span></>
             )}
 
             <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-400 font-black uppercase ml-1">Restart</span>
@@ -250,6 +273,12 @@ export default function App() {
         {activeTool === 'drafting' && (
           <motion.div key={`draft-${draftKey}`} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="h-full">
             <DraftingAgentView />
+          </motion.div>
+        )}
+
+        {activeTool === 'research' && (
+          <motion.div key={`research-${researchKey}`} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className="h-full">
+            <ITResearchAgentView />
           </motion.div>
         )}
       </div>

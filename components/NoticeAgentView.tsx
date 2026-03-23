@@ -10,7 +10,7 @@ import {
   AlertOctagon, TrendingUp, IndianRupee, Landmark
 } from "lucide-react";
 import { notice_api } from "@/lib/api";
-import { IssueSchema } from "@/types/validate";
+import { IssueSchema, NoticeValidationResponse } from "@/types/validate";
 
 const DOMAINS = [
   { label: "Direct Tax", value: "Direct Tax" },
@@ -19,7 +19,7 @@ const DOMAINS = [
   { label: "Customs", value: "Indirect Tax - Customs" },
 ];
 
-const API_BASE_URL = 'https://laksss-ai-legal-suite.hf.space';
+const API_BASE_URL = 'https://laksss-tax-hub.hf.space';
 
 export default function NoticeAgentView() {
   const [file, setFile] = useState<File | null>(null);
@@ -27,7 +27,7 @@ export default function NoticeAgentView() {
   const [domain, setDomain] = useState("Direct Tax");
   const [docType, setDocType] = useState("Notice");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any | null>(null);
+  const [result, setResult] = useState<NoticeValidationResponse | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -191,8 +191,8 @@ export default function NoticeAgentView() {
                   </table>
                 </div>
                 <div><SectionHeader title="Financial Summary" icon={IndianRupee} /><div className="grid grid-cols-3 gap-3 mt-2"><FinCard label="Tax Demand" value={result.demand?.tax || result.llm_input?.demand_amount?.tax} /><FinCard label="Interest" value={result.demand?.interest || result.llm_input?.demand_amount?.interest} /><FinCard label="Proposed Adjustment" value={totalAdjustment || null} highlight /></div></div>
-                {result.llm_input?.extracted_tables?.length > 0 && (
-                  <div><SectionHeader title="Statutory Data Tables" icon={FileText} /><div className="space-y-4 mt-2">{result.llm_input.extracted_tables.map((tableHtml: string, i: number) => (<div key={i} className="bg-white border rounded-lg overflow-x-auto shadow-sm p-1"><div className="audit-table-container" dangerouslySetInnerHTML={{ __html: tableHtml }} /></div>))}</div></div>
+                {(result.llm_input?.extracted_tables?.length ?? 0) > 0 && (
+                  <div><SectionHeader title="Statutory Data Tables" icon={FileText} /><div className="space-y-4 mt-2">{result.llm_input?.extracted_tables?.map((tableHtml: string, i: number) => (<div key={i} className="bg-white border rounded-lg overflow-x-auto shadow-sm p-1"><div className="audit-table-container" dangerouslySetInnerHTML={{ __html: tableHtml }} /></div>))}</div></div>
                 )}
                 <div className="grid grid-cols-2 gap-3">
                   <Section title="Strategic Advisory" icon={BookOpen}><div className="space-y-4">{Object.entries(result.advisory_notes || {}).map(([key, value]: any, i) => (<div key={i} className="border-l-2 border-[#1A3A5C] pl-3"><p className="text-[10px] font-bold text-[#1A3A5C] uppercase mb-0.5">{key}</p><p className="text-[11px] text-[#4A4A4A]">{value}</p></div>))}</div></Section>

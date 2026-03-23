@@ -4,7 +4,7 @@ import { TDSResult } from '@/types';
 import { SectionListResponse, CompareResponse, ChatMessage } from '@/types/it-agent';
 import { NoticeValidationResponse } from '@/types/validate';
 
-const API_URL = 'https://laksss-ai-legal-suite.hf.space'; 
+const API_URL = 'https://laksss-tax-hub.hf.space'; 
 
 export const api = axios.create({ baseURL: API_URL });
 
@@ -66,7 +66,7 @@ export const summarizer_api = {
 
 // IT Agent
 export const getITSections = async (): Promise<SectionListResponse> => {
-  const response = await api.get('/it-agent/sections');
+  const response = await api.get('it-agent/sections');
   return response.data;
 };
 
@@ -84,4 +84,31 @@ export const chatWithITAgent = async (query: string, oldAct: string, newAct: str
     history
   });
   return response.data;
+};
+
+// ✅ Add this RAG API object
+// ✅ Ensure this is in lib/api.ts
+export const rag_api = {
+  // Correct health path
+  health: async () => {
+    const response = await api.get('/api/v1/retrieval/health');
+    return response.data;
+  },
+  // Correct search path
+  search: async (query: string) => {
+    const response = await api.post('/api/v1/retrieval/search', {
+      query: query,
+      filter_definitions_only: false, // Ensure this matches schema
+      top_k: 5
+    });
+    return response.data;
+  },
+  // Correct ask path
+  ask: async (query: string, history: any[]) => {
+    const response = await api.post('/api/v1/retrieval/ask', {
+      query: query,
+      history: history
+    });
+    return response.data;
+  }
 };

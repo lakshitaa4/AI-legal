@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
+import { Editor } from '@tiptap/react';
 import {
   FileText, Send, Download, Sparkles, MessageSquare, Edit3,
   ShieldCheck, Eye, EyeOff, X, GripHorizontal,
@@ -113,7 +114,7 @@ export default function DraftingAgentView() {
           const data = statusData.result;
           setResult(data);
           setEditedSections(data.sections);
-          editor?.commands.setContent(data.sections.map((s: any) => s.content).join("<br><br>"));
+          editor?.commands.setContent(data.sections.map((s: DraftSection) => s.content).join("<br><br>"));
           completed = true;
         } else if (statusData.status === "failed") {
           throw new Error(statusData.error || "Drafting failed");
@@ -139,7 +140,7 @@ export default function DraftingAgentView() {
       formData.append("filename", `${draftType}_Draft.docx`);
 
       // SURGICAL FIX: Use the full HF URL
-      const API_URL = 'https://laksss-ai-legal-suite.hf.space'; 
+      const API_URL = 'https://laksss-tax-hub.hf.space';
       const res = await fetch(`${API_URL}/api/v1/drafting/download`, { 
         method: "POST", 
         body: formData 
@@ -256,7 +257,7 @@ export default function DraftingAgentView() {
                     <TBtn e={editor} cmd={() => editor.chain().focus().toggleItalic().run()}
                       active={editor.isActive("italic")} icon={Italic} label="Italic" />
                     <TBtn e={editor}
-                      cmd={() => { (editor.chain().focus() as any).toggleUnderline?.().run(); }}
+                      cmd={() => { editor?.chain().focus().toggleUnderline().run(); }}
                       active={editor.isActive("underline")}
                       icon={() => <span className="text-[13px] font-bold underline leading-none" style={{ fontFamily: 'serif' }}>U</span>}
                       label="Underline" />
@@ -513,7 +514,15 @@ function ChatFAB({ isOpen, setIsOpen, draftContext }: {
 }
 
 // ─── TINY SHARED COMPONENTS ───────────────────────────────────────────────────
-function TBtn({ e, cmd, active, icon: Icon, label }: any) {
+interface TBtnProps {
+  e?: Editor | null;
+  cmd: () => void;
+  active?: boolean;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement> & { size?: number; strokeWidth?: number }>;
+  label: string;
+}
+
+function TBtn({ e, cmd, active, icon: Icon, label }: TBtnProps) {
   return (
     <button onClick={cmd} title={label}
       className="p-1.5 rounded transition-colors"
@@ -531,7 +540,14 @@ function Divider() {
   return <div style={{ width: 1, height: 14, background: C.border }} />;
 }
 
-function SelectField({ label, value, onChange, children }: any) {
+interface SelectFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  children: React.ReactNode;
+}
+
+function SelectField({ label, value, onChange, children }: SelectFieldProps) {
   return (
     <div className="flex items-center gap-1.5">
       <span className="text-[9px] uppercase tracking-widest font-medium" style={{ color: C.muted }}>{label}</span>
@@ -544,7 +560,13 @@ function SelectField({ label, value, onChange, children }: any) {
   );
 }
 
-function EmptyState({ icon: Icon, label, small = false }: any) {
+interface EmptyStateProps {
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement> & { size?: number; strokeWidth?: number }>;
+  label: string;
+  small?: boolean;
+}
+
+function EmptyState({ icon: Icon, label, small = false }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center h-full select-none" style={{ color: C.muted }}>
       <Icon size={small ? 28 : 44} strokeWidth={1} className={`mb-2.5 opacity-20 ${small ? "" : "opacity-20"}`} />
